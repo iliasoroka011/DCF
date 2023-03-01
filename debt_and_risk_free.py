@@ -177,8 +177,18 @@ def bond_price_full(tiker) :
 
 
     # To do: probability of default
-    return cost_of_debt, risk_free
+    return cost_of_debt
 
-cost_of_debt, risk_free_rate  = bond_price_full(ticer)
+
+def risk_free_r ():
+    url = 'https://www.alphavantage.co/query?function=TREASURY_YIELD&interval=monthly&maturity=30year&apikey=2PVDNF0ZUOH9BVDV'
+    r = requests.get(url)
+    bond_10 = r.json()
+    bond_current = pd.DataFrame(bond_10)
+    risk_free = float(bond_current['data'][0]['value'])
+    return risk_free
+
+cost_of_debt  = bond_price_full(ticer)
+risk_free_rate = risk_free_r
 print('Cost of debt: ', cost_of_debt)
 print('Rik free rate(10y treasury_Yield): ', risk_free_rate )
