@@ -7,22 +7,41 @@ import requests
 pd.options.display.max_rows = None
 pd.options.display.max_columns = None
 msft = yf.Ticker("KO")
+import statsmodels.formula.api as smf
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+plt.style.use('fivethirtyeight')
+plt.rcParams['lines.linewidth'] = 1.5
+from statsmodels.tsa.ar_model import AutoReg
+
+from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import Lasso
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import make_pipeline
+
 #print(msft.shares)
 
 #print(msft.fast_info['market_cap'])
 #print(float(msft.fast_info['shares']) * float(msft.fast_info['last_price']))
 
-
-tax_rate = float(msft.quarterly_income_stmt.loc['Tax Rate For Calcs'][0])
 #print(msft.get_income_stmt())
 url = 'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=AAPL&apikey=PVDNF0ZUOH9BVDV'
 r = requests.get(url)
 data = r.json()
 income_y = pd.DataFrame(data['annualReports'])
 income_q = pd.DataFrame(data['quarterlyReports'])
-print(income_q)
+income_r = income_q['grossProfit'].astype(float).iloc[::-1].reset_index(drop=True)
+print(income_r)
+print(income_y)
+plt.plot(income_r, color='red')
+plt.show()
+#model1 = smf.ols(formula='grossProfit ~ totalRevenue', data=income_q).fit()
+#print(model1.summary())
 
-def adj_income(income_q):
+
 
 
 
